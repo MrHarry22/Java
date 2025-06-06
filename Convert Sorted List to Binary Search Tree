@@ -1,0 +1,117 @@
+import java.util.*;
+
+public class SortedListToBST {
+    // Definition for singly-linked list.
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int val) { this.val = val; }
+    }
+
+    // Definition for binary tree.
+    static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int val) {
+            this.val = val;
+            this.left = this.right = null;
+        }
+    }
+
+    private static ListNode current;
+
+    public static TreeNode sortedListToBST(ListNode head) {
+        int size = getLength(head);
+        current = head;
+        return convertListToBST(0, size - 1);
+    }
+
+    // Helper to convert list to BST
+    private static TreeNode convertListToBST(int left, int right) {
+        if (left > right) return null;
+
+        int mid = (left + right) / 2;
+
+        // Recursively build left subtree
+        TreeNode leftChild = convertListToBST(left, mid - 1);
+
+        // Now current is at root
+        TreeNode node = new TreeNode(current.val);
+        node.left = leftChild;
+
+        current = current.next;
+
+        // Recursively build right subtree
+        node.right = convertListToBST(mid + 1, right);
+
+        return node;
+    }
+
+    private static int getLength(ListNode head) {
+        int len = 0;
+        while (head != null) {
+            len++;
+            head = head.next;
+        }
+        return len;
+    }
+
+    // Level-order traversal to produce output as list (with nulls)
+    public static List<String> levelOrder(TreeNode root) {
+        List<String> result = new ArrayList<>();
+        if (root == null) return result;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node != null) {
+                result.add(String.valueOf(node.val));
+                queue.offer(node.left);
+                queue.offer(node.right);
+            } else {
+                result.add("null");
+            }
+        }
+
+        // Remove trailing "null"
+        int i = result.size() - 1;
+        while (i >= 0 && result.get(i).equals("null")) {
+            result.remove(i--);
+        }
+
+        return result;
+    }
+
+    // Helper to read list input from user
+    public static ListNode readInputList(Scanner scanner) {
+        System.out.println("Enter number of nodes in the linked list:");
+        int n = scanner.nextInt();
+        if (n == 0) return null;
+
+        System.out.println("Enter " + n + " sorted values:");
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+
+        for (int i = 0; i < n; i++) {
+            tail.next = new ListNode(scanner.nextInt());
+            tail = tail.next;
+        }
+
+        return dummy.next;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        ListNode head = readInputList(scanner);
+        TreeNode root = sortedListToBST(head);
+        List<String> output = levelOrder(root);
+
+        System.out.println("BST in level-order:");
+        System.out.println(output);
+
+        scanner.close();
+    }
+}
