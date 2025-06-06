@@ -1,0 +1,44 @@
+public class SortedArrayToBST {
+    // TreeNode class representing each node in the BST
+    public static class TreeNode {
+        int val;
+        TreeNode left, right;
+        TreeNode(int val) {
+            this.val = val;
+            this.left = this.right = null;
+        }
+    }
+
+    // Function to construct the BST from the sorted array
+    public static TreeNode sortedArrayToBST(int[] nums) {
+        return sortedArrayToBSTHelper(nums, 0, nums.length - 1);
+    }
+
+    // Helper function to recursively build the BST
+    private static TreeNode sortedArrayToBSTHelper(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        int mid = left + (right - left) / 2;
+        TreeNode node = new TreeNode(nums[mid]);
+        node.left = sortedArrayToBSTHelper(nums, left, mid - 1);
+        node.right = sortedArrayToBSTHelper(nums, mid + 1, right);
+        return node;
+    }
+
+    // Function to print the BST in preorder traversal
+    public static void preorderTraversal(TreeNode root) {
+        if (root != null) {
+            System.out.print(root.val + " ");
+            preorderTraversal(root.left);
+            preorderTraversal(root.right);
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {-10, -3, 0, 5, 9};
+        TreeNode root = sortedArrayToBST(nums);
+        System.out.println("Preorder Traversal of the BST:");
+        preorderTraversal(root);
+    }
+}
