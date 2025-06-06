@@ -1,5 +1,6 @@
+import java.util.*;
+
 public class SortedArrayToBST {
-    // TreeNode class representing each node in the BST
     public static class TreeNode {
         int val;
         TreeNode left, right;
@@ -9,36 +10,63 @@ public class SortedArrayToBST {
         }
     }
 
-    // Function to construct the BST from the sorted array
     public static TreeNode sortedArrayToBST(int[] nums) {
         return sortedArrayToBSTHelper(nums, 0, nums.length - 1);
     }
 
-    // Helper function to recursively build the BST
     private static TreeNode sortedArrayToBSTHelper(int[] nums, int left, int right) {
-        if (left > right) {
-            return null;
-        }
-        int mid = left + (right - left) / 2;
+        if (left > right) return null;
+        int mid = (left + right + 1) / 2; // RIGHT-biased middle
         TreeNode node = new TreeNode(nums[mid]);
         node.left = sortedArrayToBSTHelper(nums, left, mid - 1);
         node.right = sortedArrayToBSTHelper(nums, mid + 1, right);
         return node;
     }
 
-    // Function to print the BST in preorder traversal
-    public static void preorderTraversal(TreeNode root) {
-        if (root != null) {
-            System.out.print(root.val + " ");
-            preorderTraversal(root.left);
-            preorderTraversal(root.right);
+    public static List<String> levelOrderTraversal(TreeNode root) {
+        List<String> result = new ArrayList<>();
+        if (root == null) return result;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node != null) {
+                result.add(String.valueOf(node.val));
+                queue.offer(node.left);
+                queue.offer(node.right);
+            } else {
+                result.add("null");
+            }
         }
+
+        // Remove trailing "null"s for clean output
+        int i = result.size() - 1;
+        while (i >= 0 && result.get(i).equals("null")) {
+            result.remove(i--);
+        }
+
+        return result;
     }
 
     public static void main(String[] args) {
-        int[] nums = {-10, -3, 0, 5, 9};
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the number of elements in the sorted array:");
+        int n = scanner.nextInt();
+
+        int[] nums = new int[n];
+        System.out.println("Enter " + n + " sorted elements:");
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+
         TreeNode root = sortedArrayToBST(nums);
-        System.out.println("Preorder Traversal of the BST:");
-        preorderTraversal(root);
+        List<String> output = levelOrderTraversal(root);
+
+        System.out.println(output);
+
+        scanner.close();
     }
 }
