@@ -1,0 +1,23 @@
+public class AntReturnCounter {
+    public static int countReturnsToOrigin(int[] moves) {
+        int currentPosition = 0;
+        int returnCount = 0;
+
+        for (int move : moves) {
+            currentPosition += move;
+            if (currentPosition == 0) {
+                returnCount++;
+            }
+        }
+
+        return returnCount;
+    }
+
+    public static void main(String[] args) {
+        // Example input
+        int[] moves = {1, -1, 1, -1, 1};
+
+        int result = countReturnsToOrigin(moves);
+        System.out.println("The ant returns to the origin " + result + " times.");
+    }
+}
