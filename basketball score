@@ -1,0 +1,39 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input N and K
+        System.out.print("Enter number of shots (N): ");
+        int N = scanner.nextInt();
+
+        System.out.print("Enter size of subarray (K): ");
+        int K = scanner.nextInt();
+
+        // Input array A
+        System.out.println("Enter " + N + " integers (distances):");
+        int[] A = new int[N];
+        for (int i = 0; i < N; i++) {
+            A[i] = scanner.nextInt();
+        }
+
+        // Calculate and print max score
+        int maxScore = getMaxScore(N, K, A);
+        System.out.println("Maximum score from a subarray of size " + K + ": " + maxScore);
+    }
+
+    public static int getMaxScore(int N, int K, int[] A) {
+        int maxScore = Integer.MIN_VALUE;
+
+        for (int start = 0; start <= N - K; start++) {
+            int score = 0;
+            for (int i = 0; i < K; i++) {
+                score += (i + 1) * A[start + i]; * value
+            }
+            maxScore = Math.max(maxScore, score);
+        }
+
+        return maxScore;
+    }
+}
