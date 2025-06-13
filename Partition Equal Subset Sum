@@ -1,0 +1,45 @@
+import java.util.Scanner;
+
+public class PartitionEqualSubsetSum {
+
+    public static boolean canPartition(int[] nums) {
+        int total = 0;
+        for (int num : nums) {
+            total += num;
+        }
+
+        // If total sum is odd, cannot partition
+        if (total % 2 != 0) return false;
+
+        int target = total / 2;
+        boolean[] dp = new boolean[target + 1];
+        dp[0] = true;
+
+        for (int num : nums) {
+            for (int j = target; j >= num; j--) {
+                dp[j] = dp[j] || dp[j - num];
+            }
+        }
+
+        return dp[target];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input array size
+        System.out.print("Enter number of elements: ");
+        int n = scanner.nextInt();
+
+        // Input array elements
+        int[] nums = new int[n];
+        System.out.println("Enter the elements:");
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+
+        // Output result
+        boolean result = canPartition(nums);
+        System.out.println( result);
+    }
+}
