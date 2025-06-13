@@ -1,0 +1,88 @@
+import java.util.Scanner;
+
+public class CrosswordSearch {
+
+    // Directions: N, NE, E, SE, S, SW, W, NW
+    private static final int[] dx = {-1, -1,  0, 1, 1,  1,  0, -1};
+    private static final int[] dy = { 0,  1,  1, 1, 0, -1, -1, -1};
+
+    private static boolean search(char[][] board, boolean[][] mark, String word, int x, int y) {
+        int n = board.length;
+        int len = word.length();
+
+        for (int dir = 0; dir < 8; dir++) {
+            int newX = x, newY = y;
+            int k;
+
+            for (k = 0; k < len; k++) {
+                int i = newX + dx[dir] * k;
+                int j = newY + dy[dir] * k;
+
+                if (i < 0 || j < 0 || i >= n || j >= n || board[i][j] != word.charAt(k)) {
+                    break;
+                }
+            }
+
+            if (k == len) {
+                // Word found; mark it
+                for (k = 0; k < len; k++) {
+                    int i = newX + dx[dir] * k;
+                    int j = newY + dy[dir] * k;
+                    mark[i][j] = true;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input size
+        System.out.print("Enter size of crossword (n x n): ");
+        int n = scanner.nextInt();
+
+        // Input board
+        char[][] board = new char[n][n];
+        System.out.println("Enter the crossword letters (row by row):");
+        for (int i = 0; i < n; i++) {
+            String row = scanner.next();
+            for (int j = 0; j < n; j++) {
+                board[i][j] = Character.toUpperCase(row.charAt(j));
+            }
+        }
+
+        // Input word to search
+        System.out.print("Enter word to search: ");
+        String word = scanner.next().toUpperCase();
+
+        boolean[][] mark = new boolean[n][n];
+        boolean found = false;
+
+        // Search for the word
+        for (int i = 0; i < n && !found; i++) {
+            for (int j = 0; j < n && !found; j++) {
+                if (board[i][j] == word.charAt(0)) {
+                    found = search(board, mark, word, i, j);
+                }
+            }
+        }
+
+        if (found) {
+            System.out.println("\nWord found. Crossword with highlighted word:");
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (mark[i][j]) {
+                        System.out.print("[" + board[i][j] + "] ");
+                    } else {
+                        System.out.print(" " + board[i][j] + "  ");
+                    }
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("Word not found in the puzzle.");
+        }
+    }
+}
