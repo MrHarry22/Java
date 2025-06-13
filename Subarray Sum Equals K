@@ -1,0 +1,30 @@
+import java.util.*;
+public class Main {
+    public static boolean hasSubarraySum(int[] nums, int k) {
+        HashMap<Integer, Integer> freq = new HashMap<>();
+        freq.put(0, 1); 
+        int presum = 0;
+        for (int num : nums) {
+            presum += num;
+            if (freq.containsKey(presum - k)) {
+                return true;
+            }
+            freq.put(presum, freq.getOrDefault(presum, 0) + 1);
+        }
+        return false;
+    }
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the number of elements in the array:");
+        int n = scanner.nextInt();
+        int[] nums = new int[n];
+        System.out.println("Enter the elements of the array:");
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+        System.out.println("Enter the value of k:");
+        int k = scanner.nextInt();
+        boolean result = hasSubarraySum(nums, k);
+        System.out.println(result);
+    }
+}
